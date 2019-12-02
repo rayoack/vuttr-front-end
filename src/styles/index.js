@@ -28,6 +28,7 @@ export default createGlobalStyle`
     font-size: 20px;
     font-weight: 400;
     letter-spacing: 0.4px;
+    overflow-x: hidden;
   }
 
   h1,

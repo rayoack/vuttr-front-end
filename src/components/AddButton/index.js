@@ -1,9 +1,12 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import { ButtonContainer } from './styles';
 
-export default function AddButton() {
+export default function AddButton({ setOpenAddModal }) {
   return (
-    <div />
+    <ButtonContainer onClick={() => setOpenAddModal(prevState => !prevState)}>
+      <span>+</span>
+      <p>Add</p>
+    </ButtonContainer>
   );
 }

@@ -13,12 +13,25 @@ import removeNotification from '../../components/removeNotification'
 import { Container, ContainerInput } from './styles';
 
 export default function Home() {
-  const [tools, setTools] = useState([])
+  const [tools, setTools] = useState([{
+    title: 'Notion',
+    link: "https://notion.so",
+    description: "All in one tool to organize teams and ideas. Write, plan, collaborate, and get organized. ",
+    tags: [
+        "organization",
+        "planning",
+        "collaboration",
+        "writing",
+        "calendar"
+    ]
+  }])
   const [search, setSearch] = useState('')
   const [searchByTag, setSearchByTag] = useState(false)
   const [openAddModal, setOpenAddModal] = useState(false)
   const [openRemoveModal, setOpenRemoveModal] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  console.log(openAddModal)
 
   const getTools= () => {
 
@@ -55,7 +68,7 @@ export default function Home() {
           searchByTagState={searchByTag}
           setSearchByTag={setSearchByTag}
         />
-        <AddButton />
+        <AddButton openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} />
       </ContainerInput>
       
       <ToolsList />
