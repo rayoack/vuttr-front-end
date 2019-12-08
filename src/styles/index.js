@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import 'react-toastify/dist/ReactToastify.css';
 import styled, { createGlobalStyle } from 'styled-components';
 

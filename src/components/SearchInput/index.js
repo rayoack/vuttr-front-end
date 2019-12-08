@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container } from './styles';
+import { FormContainer } from './styles';
 
 import checkImg from '../../assets/check.svg'
 
@@ -8,9 +8,10 @@ export default function SearchInput({
   searchState,
   setSearch,
   searchByTagState,
-  setSearchByTag }) {
+  setSearchByTag,
+  handleSearchTools }) {
   return (
-    <Container>
+    <FormContainer onSubmit={e => handleSearchTools(e)}>
       <input
         placeholder='search'
         type='text'
@@ -27,6 +28,6 @@ export default function SearchInput({
       <label for='byTag' />
 
       <label>search in tags only</label>
-    </Container>
+    </FormContainer>
   );
 }

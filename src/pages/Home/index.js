@@ -6,51 +6,71 @@ import SearchInput from '../../components/SearchInput'
 import AddButton from '../../components/AddButton'
 import ToolsList from '../../components/ToolsList'
 import ModalAdd from '../../components/ModalAdd'
-import ModalRemove from '../../components/ModalRemove'
 import addNotification from '../../components/addNotification'
+import ModalRemove from '../../components/ModalRemove'
 import removeNotification from '../../components/removeNotification'
 
-import { Container, ContainerInput } from './styles';
+import LoadingSpinner from '../../assets/loading-spinner.svg'
+
+import api from '../../services/api'
+
+import { ContainerBody, ContainerInput } from './styles';
 
 export default function Home() {
-  const [tools, setTools] = useState([{
-    title: 'Notion',
-    link: "https://notion.so",
-    description: "All in one tool to organize teams and ideas. Write, plan, collaborate, and get organized. ",
-    tags: [
-        "organization",
-        "planning",
-        "collaboration",
-        "writing",
-        "calendar"
-    ]
-  }])
+  const [tools, setTools] = useState([])
   const [search, setSearch] = useState('')
   const [searchByTag, setSearchByTag] = useState(false)
   const [openAddModal, setOpenAddModal] = useState(false)
   const [openRemoveModal, setOpenRemoveModal] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  console.log(openAddModal)
+  /* States only for ModalAdd component */
+    const [toolName, setToolName] = useState('')
+    const [toolLink, setToolLink] = useState('')
+    const [toolDescription, setToolDescription] = useState('')
+    const [toolTags, setToolTags] = useState('')
 
-  const getTools= () => {
+  useEffect(() => {
+    async function getTools() {
+      setLoading(true)
+      const { data: toolsArr } = await api.get('/tools')
+      
+      setTools(toolsArr)
+      setLoading(false)
+    }
 
+    getTools()
+  }, [])
+
+  const handleSearchTools = async (e) => {
+    e.preventDefault()
+    if(searchByTag) {
+      const { data: tagToolS } = await api.get(`/tools?tags_like=${search}`)
+      setTools(tagToolS)
+    } else {
+      const { data: searchToolS } = await api.get(`/tools?q=${search}`)
+      setTools(searchToolS)
+    }
   }
 
-  const getAllTools = () => {
+  const addTool = async e => {
+    e.preventDefault()
 
-  }
+    const tagsArr = toolTags.split(' ');
 
-  const getByTag = () => {
+    try {
+      await api.post('/tools', {
+        title: toolName,
+        link: toolLink,
+        description: toolDescription,
+        tags: tagsArr
+      })
 
-  }
-
-  const searchTools = () => {
-
-  }
-
-  const addTool = () => {
-
+      addNotification()
+      setOpenAddModal(false)
+    } catch (error) {
+      console.log({error})
+    }
   }
 
   const RemoveTool = () => {
@@ -58,22 +78,40 @@ export default function Home() {
   }
   
   return (
-    <Container>
-      <Header />
+    <>
+      <ContainerBody>
+        <Header />
 
-      <ContainerInput>
-        <SearchInput
-          searchState={search}
-          setSearch={setSearch}
-          searchByTagState={searchByTag}
-          setSearchByTag={setSearchByTag}
-        />
-        <AddButton openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} />
-      </ContainerInput>
-      
-      <ToolsList />
-      
+        <ContainerInput>
+          <SearchInput
+            searchState={search}
+            setSearch={setSearch}
+            searchByTagState={searchByTag}
+            setSearchByTag={setSearchByTag}
+            handleSearchTools={handleSearchTools}
+          />
+          <AddButton setOpenAddModal={setOpenAddModal} />
+        </ContainerInput>
+        
+        {loading
+          ? <img src={LoadingSpinner} alt='loading...' />
+          : <ToolsList tools={tools} setOpenRemoveModal={setOpenRemoveModal} />
+        }
+        
+        
+        {openAddModal && (
+          <ModalAdd
+          openAddModal={openAddModal}
+          setToolName={setToolName}
+          setToolLink={setToolLink}
+          setToolDescription={setToolDescription}
+          setToolTags={setToolTags}
+          setOpenAddModal={setOpenAddModal}
+          addTool={addTool}
+          />
+          )}
+      </ContainerBody>
       <ToastContainer />
-    </Container>
+    </>
   );
 }

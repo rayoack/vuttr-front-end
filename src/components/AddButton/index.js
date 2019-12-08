@@ -4,7 +4,7 @@ import { ButtonContainer } from './styles';
 
 export default function AddButton({ setOpenAddModal }) {
   return (
-    <ButtonContainer onClick={() => setOpenAddModal(prevState => !prevState)}>
+    <ButtonContainer onClick={() => setOpenAddModal(true)}>
       <span>+</span>
       <p>Add</p>
     </ButtonContainer>

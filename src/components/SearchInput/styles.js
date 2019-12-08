@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import check from '../../assets/check.svg'
 
-export const Container = styled.div`
+export const FormContainer = styled.form`
   & {
     margin: 40px 0 20px;
     display: flex;
