@@ -13,7 +13,8 @@ export default function removeNotification() {
         height: '158px',
         width: '305px',
         color: "white !important",
-        fontWeight: "regular"
+        fontWeight: "regular",
+        padding: '20px'
       }),
       closeOnClick: false,
       toastId: "remove_toast",

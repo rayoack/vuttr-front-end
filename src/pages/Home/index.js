@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import Header from '../../components/Header'
 import SearchInput from '../../components/SearchInput'
@@ -30,17 +30,21 @@ export default function Home() {
     const [toolDescription, setToolDescription] = useState('')
     const [toolTags, setToolTags] = useState('')
 
-  useEffect(() => {
-    async function getTools() {
-      setLoading(true)
-      const { data: toolsArr } = await api.get('/tools')
-      
-      setTools(toolsArr)
-      setLoading(false)
-    }
+  /* States only for ModalRemove */
+    const [toolId, setToolId] = useState('')
 
+  console.log(openRemoveModal)
+  useEffect(() => {
     getTools()
   }, [])
+
+  const getTools = async () => {
+    setLoading(true)
+    const { data: toolsArr } = await api.get('/tools')
+    
+    setTools(toolsArr)
+    setLoading(false)
+  }
 
   const handleSearchTools = async (e) => {
     e.preventDefault()
@@ -68,15 +72,25 @@ export default function Home() {
 
       addNotification()
       setOpenAddModal(false)
+      getTools()
     } catch (error) {
       console.log({error})
     }
   }
 
-  const RemoveTool = () => {
-
+  const openModalRemoveTool = e => {
+    setToolId(e)
+    setOpenRemoveModal(true)
   }
   
+  const handleRemoveTool = async () => {
+    await api.delete(`/tools/${toolId}`)
+
+    removeNotification()
+    setOpenRemoveModal(false)
+    getTools()
+  }
+
   return (
     <>
       <ContainerBody>
@@ -95,12 +109,13 @@ export default function Home() {
         
         {loading
           ? <img src={LoadingSpinner} alt='loading...' />
-          : <ToolsList tools={tools} setOpenRemoveModal={setOpenRemoveModal} />
+          : <ToolsList tools={tools} removeTool={openModalRemoveTool} />
         }
         
         
-        {openAddModal && (
-          <ModalAdd
+      </ContainerBody>
+      {openAddModal && (
+        <ModalAdd
           openAddModal={openAddModal}
           setToolName={setToolName}
           setToolLink={setToolLink}
@@ -108,9 +123,15 @@ export default function Home() {
           setToolTags={setToolTags}
           setOpenAddModal={setOpenAddModal}
           addTool={addTool}
-          />
-          )}
-      </ContainerBody>
+        />
+      )}
+
+      {openRemoveModal && (
+        <ModalRemove
+          setOpenRemoveModal={setOpenRemoveModal}
+          handleRemoveTool={handleRemoveTool}
+        />
+      )}
       <ToastContainer />
     </>
   );

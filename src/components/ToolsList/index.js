@@ -11,14 +11,14 @@ import {
   TagsContainer
 } from './styles';
 
-export default function ToolsList({ tools, setOpenRemoveModal }) {
+export default function ToolsList({ tools, removeTool }) {
   return (
     <CardsContainer>
       {tools.map(tool => (
         <ToolCard key={tool.id}>
           <CardHeader>
             <CardTitle href={tool.link}>{tool.title}</CardTitle>
-            <CardButton onClick={setOpenRemoveModal(true)}>
+            <CardButton onClick={() => removeTool(tool.id)}>
               <MdClear size={30} />
               <p>remove</p>
             </CardButton>

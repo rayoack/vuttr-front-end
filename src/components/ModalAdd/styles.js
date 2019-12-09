@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const ContainerModal = styled.div`
     & {
-        position: absolute;
+        position: fixed;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -10,7 +10,7 @@ export const ContainerModal = styled.div`
         width: 100vw;
         top: 0;
         bottom: 0;
-        background: rgba(23, 12, 58, 0.7) 0% 0% no-repeat padding-box;
+        background: rgba(23, 12, 58, 0.7);
         opacity: 1;
     }
 `;
